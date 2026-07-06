@@ -15,7 +15,7 @@
           owner = "fleasion";
           repo = "Fleasion";
           rev = "main-indev";
-          sha256 = "sha256-rDsJwbbkhqShyevgF5DL0XWRyr+aMyIuRmDW1UL4V+4=";
+          sha256 = "sha256-GQNsBl66O4kuQkI+jpqdyDi9e1OTUqN1iyysxb2OX4A=";
         };
 
         srcDir = fleasionSrc;
@@ -74,6 +74,23 @@
           cd "${toString srcDir}"
           exec python launcher.py "$@"
         '';
+
+        fleasionDesktopItem = pkgs.makeDesktopItem {
+          name = "fleasion";
+          desktopName = "Fleasion";
+          exec = "${fleasionSrcRun}/bin/fleasion-src";
+          icon = "fleasion";
+          categories = [ "Utility" ];
+        };
+
+        fleasionPackage = pkgs.symlinkJoin {
+          name = "fleasion";
+          paths = [ fleasionSrcRun fleasionDesktopItem ];
+          postBuild = ''
+            mkdir -p $out/share/icons/hicolor/256x256/apps
+            cp ${./fleasion.png} $out/share/icons/hicolor/256x256/apps/fleasion.png
+          '';
+        };
 
         polkitActionNamespace = "com.fleasion.proxy-helper";
         polkitRunActionId = "com.fleasion.proxy-helper.run";
@@ -134,11 +151,11 @@
         '';
       in
       {
-        packages.default = fleasionSrcRun;
+        packages.default = fleasionPackage;
 
         apps.default = {
           type = "app";
-          program = "${fleasionSrcRun}/bin/fleasion-src";
+          program = "${fleasionPackage}/bin/fleasion-src";
         };
 
         devShells.default = pkgs.mkShell {
