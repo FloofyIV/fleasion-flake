@@ -49,6 +49,7 @@
           libxcb
           libxkbcommon
           portaudio
+          nss
         ];
 
         libPath = pkgs.lib.makeLibraryPath runtimeLibs;
