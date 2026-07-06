@@ -15,7 +15,7 @@
           owner = "fleasion";
           repo = "Fleasion";
           rev = "main-indev";
-          sha256 = "sha256-GoHlZytdwblxxTtjCrdhpXXiOTw2FKn3zulSJM4end8=";
+          sha256 = "sha256-SoMP2XYGPz+3bPI3dvtC9YHqyldx6Tc5bVPJ8jmyVWI=";
         };
 
         srcDir = fleasionSrc;
