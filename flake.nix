@@ -1,5 +1,5 @@
 {
-  description = "Run Fleasion from source (assumes a Python project with a Qt-based tray GUI + sounddevice audio)";
+  description = "fleasion";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -14,8 +14,8 @@
         fleasionSrc = pkgs.fetchFromGitHub {
           owner = "fleasion";
           repo = "Fleasion";
-          rev = "main";
-          sha256 = "sha256-to0ipldLI5zHVgUpXGqh1zlOUjxXWKlpGi0NhyFgibk=";
+          rev = "main-indev";
+          sha256 = "sha256-rDsJwbbkhqShyevgF5DL0XWRyr+aMyIuRmDW1UL4V+4=";
         };
 
         srcDir = fleasionSrc;
@@ -70,7 +70,7 @@
 
           python -c "import DracoPy" 2>/dev/null || pip install --quiet DracoPy
           python -c "import browser_cookie3" 2>/dev/null || pip install --quiet browser-cookie3
-
+          
           cd "${toString srcDir}"
           exec python launcher.py "$@"
         '';
@@ -100,7 +100,7 @@
             <vendor_url>https://github.com/fleasion/Fleasion</vendor_url>
             <action id="${polkitRunActionId}">
               <description>Run the Fleasion Linux proxy helper</description>
-              <message>Authentication is required to let Fleasion update Roblox proxy hosts and run its local port-443 relay.</message>
+              <message>Authentication is required to let Fleasion update POC proxy hosts and run its local port-443 relay.</message>
               <defaults>
                 <allow_any>no</allow_any>
                 <allow_inactive>no</allow_inactive>
@@ -144,12 +144,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [ pythonEnv ] ++ runtimeLibs;
           LD_LIBRARY_PATH = libPath;
-          shellHook = ''
-            echo "Fleasion dev shell."
-            echo "Run: nix run .   (handles PYTHONPATH + venv for DracoPy/browser-cookie3 automatically)"
-            echo "Manual: python -m venv --system-site-packages .venv && source .venv/bin/activate && pip install DracoPy browser-cookie3"
-          '';
-        };
+          };
 
         _fleasionPolkit = {
           inherit helperWrapper installedHelperPath polkitPolicyXml polkitPromptlessRule polkitActionNamespace;
