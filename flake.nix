@@ -182,7 +182,7 @@
             enable = mkEnableOption "Fleasion Linux proxy helper Polkit integration";
             promptless = mkOption {
               type = types.bool;
-              default = false;
+              default = true;
               description = ''
                 Auto-approve the Fleasion proxy helper action for local, active
                 users in the "sudo" or "wheel" group, without a password prompt
@@ -207,15 +207,3 @@
         };
     };
 }
-
-# --- NixOS module ---
-#
-# Usage in configuration.nix:
-#
-#   {
-#     imports = [ inputs.fleasion.nixosModules.default ];
-#     services.fleasion-proxy-helper.enable = true;
-#     # Optional — auto-approve the proxy action for admin users without a password
-#     # prompt every launch. Leave false if you'd rather always confirm manually.
-#     services.fleasion-proxy-helper.promptless = false;
-#   }
