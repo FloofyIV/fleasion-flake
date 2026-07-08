@@ -6,7 +6,10 @@ with lib;
 let
   cfg = config.services.fleasion-system;
 
-  defaultFleasionExec = "${self.packages.${pkgs.system}.default}/bin/fleasion-src";
+  polkitData = self._fleasionPolkit.${pkgs.system};
+
+  defaultProgram = "${polkitData.pythonEnv}/bin/python";
+  defaultScriptMatch = polkitData.helperDaemonScript;
 in
 {
   options.services.fleasion-system = {
@@ -15,16 +18,21 @@ in
     extraHosts = mkOption {
       type = types.lines;
       default = ''
-        127.0.0.1 assetdelivery.roblox.com
-        127.0.0.1 contentdelivery.roblox.com
-        127.0.0.1 fts.rbxcdn.com
-        127.0.0.1 gamejoin.roblox.com
+        127.0.0.1 a.com
+        127.0.0.1 b.com
+        127.0.0.1 c.com
+        127.0.0.1 d.com
       '';
     };
 
-    fleasionExecPath = mkOption {
+    fleasionProgram = mkOption {
       type = types.str;
-      default = defaultFleasionExec;
+      default = defaultProgram;
+    };
+
+    fleasionScriptMatch = mkOption {
+      type = types.str;
+      default = defaultScriptMatch;
     };
   };
 
@@ -33,8 +41,10 @@ in
 
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {
+        var cmd = action.lookup("command_line") || "";
         if (action.id == "org.freedesktop.policykit.exec" &&
-            action.lookup("program") == "${cfg.fleasionExecPath}" &&
+            action.lookup("program") == "${cfg.fleasionProgram}" &&
+            cmd.indexOf("${cfg.fleasionScriptMatch}") !== -1 &&
             subject.active && subject.local) {
           return polkit.Result.YES;
         }
@@ -42,3 +52,4 @@ in
     '';
   };
 }
+
