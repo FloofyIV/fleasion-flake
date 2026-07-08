@@ -171,7 +171,6 @@
     )
     // {
       nixosModules.default = { config, lib, pkgs, ... }:
-      nixosModules.system = import ./fleasion-system.nix { inherit self; };
         with lib;
         let
           cfg = config.services.fleasion-proxy-helper;
@@ -206,5 +205,6 @@
             ];
           };
         };
+      nixosModules.system = import ./fleasion-system.nix { inherit self; };
     };
 }
