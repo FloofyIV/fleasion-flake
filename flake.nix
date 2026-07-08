@@ -166,6 +166,8 @@
 
         _fleasionPolkit = {
           inherit helperWrapper installedHelperPath polkitPolicyXml polkitPromptlessRule polkitActionNamespace;
+          inherit pythonEnv;
+          helperDaemonScript = "${srcDir}/src/Fleasion/linux_proxy_helper_daemon.py";
         };
       }
     )
