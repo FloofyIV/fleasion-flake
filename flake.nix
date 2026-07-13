@@ -15,13 +15,12 @@
           owner = "fleasion";
           repo = "Fleasion";
           rev = "main-indev";
-          sha256 = "sha256-roWBp/dVv7dcvoRivstzZfJ5f0QMw1bE+ahplyvhzfU=";
+          sha256 = "sha256-3wvKOo4reISkFBR3NWmTXhH7TD1QDqj/92n+/ORRJNQ=";
         };
-
+        
         srcDir = fleasionSrc;
 
-
-        pythonEnv = pkgs.python3.withPackages (ps: with ps; [
+        pythonEnv = pkgs.python314.withPackages (ps: with ps; [
           pip
           pyqt6
           pyopengl
@@ -93,64 +92,64 @@
           '';
         };
 
-        polkitActionNamespace = "com.fleasion.proxy-helper";
-        polkitRunActionId = "com.fleasion.proxy-helper.run";
-        polkitInstallCaActionId = "com.fleasion.proxy-helper.install-system-ca";
-        installedHelperPath = "/usr/local/libexec/fleasion-linux-proxy-helper";
-
-        helperWrapper = pkgs.writeShellScript "fleasion-proxy-helper-daemon" ''
-          set -euo pipefail
-          export LD_LIBRARY_PATH="${libPath}:''${LD_LIBRARY_PATH:-}"
-          export PYTHONPATH="${toString srcDir}/src:''${PYTHONPATH:-}"
-          VENV_DIR="''${XDG_CACHE_HOME:-$HOME/.cache}/fleasion-venv"
-          if [ -d "$VENV_DIR" ]; then
-            source "$VENV_DIR/bin/activate"
-          fi
-          exec ${pythonEnv}/bin/python -m Fleasion.linux_proxy_helper_daemon "$@"
-        '';
-
-        polkitPolicyXml = ''
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD polkit Policy Configuration 1.0//EN"
-          "http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
-          <policyconfig>
-            <vendor>Fleasion</vendor>
-            <vendor_url>https://github.com/fleasion/Fleasion</vendor_url>
-            <action id="${polkitRunActionId}">
-              <description>Run the Fleasion Linux proxy helper</description>
-              <message>Authentication is required to let Fleasion update POC proxy hosts and run its local port-443 relay.</message>
-              <defaults>
-                <allow_any>no</allow_any>
-                <allow_inactive>no</allow_inactive>
-                <allow_active>yes</allow_active>
-              </defaults>
-              <annotate key="org.freedesktop.policykit.exec.path">${installedHelperPath}</annotate>
-              <annotate key="org.freedesktop.policykit.exec.argv1">--backend-port</annotate>
-            </action>
-            <action id="${polkitInstallCaActionId}">
-              <description>Install the Fleasion proxy CA into Linux system trust</description>
-              <message>Authentication is required to trust Fleasion's proxy CA for system WebView traffic.</message>
-              <defaults>
-                <allow_any>no</allow_any>
-                <allow_inactive>no</allow_inactive>
-                <allow_active>auth_admin</allow_active>
-              </defaults>
-              <annotate key="org.freedesktop.policykit.exec.path">${installedHelperPath}</annotate>
-              <annotate key="org.freedesktop.policykit.exec.argv1">--install-system-ca</annotate>
-            </action>
-          </policyconfig>
-        '';
-
-        polkitPromptlessRule = ''
-          polkit.addRule(function(action, subject) {
-              if (action.id == "${polkitRunActionId}" &&
-                  subject.local && subject.active &&
-                  (subject.isInGroup("sudo") || subject.isInGroup("wheel"))) {
-                  return polkit.Result.YES;
-              }
-          });
-        '';
-      in
+#           polkitActionNamespace = "com.fleasion.proxy-helper";
+#           polkitRunActionId = "com.fleasion.proxy-helper.run";
+#           polkitInstallCaActionId = "com.fleasion.proxy-helper.install-system-ca";
+#           installedHelperPath = "/usr/local/libexec/fleasion-linux-proxy-helper";
+# 
+#           helperWrapper = pkgs.writeShellScript "fleasion-proxy-helper-daemon" ''
+#             set -euo pipefail
+#             export LD_LIBRARY_PATH="${libPath}:''${LD_LIBRARY_PATH:-}"
+#             export PYTHONPATH="${toString srcDir}/src:''${PYTHONPATH:-}"
+#             VENV_DIR="''${XDG_CACHE_HOME:-$HOME/.cache}/fleasion-venv"
+#             if [ -d "$VENV_DIR" ]; then
+#               source "$VENV_DIR/bin/activate"
+#             fi
+#             exec ${pythonEnv}/bin/python -m Fleasion.linux_proxy_helper_daemon "$@"
+#           '';
+# 
+#           polkitPolicyXml = ''
+#             <?xml version="1.0" encoding="UTF-8"?>
+#             <!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD polkit Policy Configuration 1.0//EN"
+#             "http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
+#             <policyconfig>
+#               <vendor>Fleasion</vendor>
+#               <vendor_url>https://github.com/fleasion/Fleasion</vendor_url>
+#               <action id="${polkitRunActionId}">
+#                 <description>Run the Fleasion Linux proxy helper</description>
+#                 <message>Authentication is required to let Fleasion update POC proxy hosts and run its local port-443 relay.</message>
+#                 <defaults>
+#                   <allow_any>no</allow_any>
+#                   <allow_inactive>no</allow_inactive>
+#                   <allow_active>yes</allow_active>
+#                 </defaults>
+#                 <annotate key="org.freedesktop.policykit.exec.path">${installedHelperPath}</annotate>
+#                 <annotate key="org.freedesktop.policykit.exec.argv1">--backend-port</annotate>
+#               </action>
+#               <action id="${polkitInstallCaActionId}">
+#                 <description>Install the Fleasion proxy CA into Linux system trust</description>
+#                 <message>Authentication is required to trust Fleasion's proxy CA for system WebView traffic.</message>
+#                 <defaults>
+#                   <allow_any>no</allow_any>
+#                   <allow_inactive>no</allow_inactive>
+#                   <allow_active>auth_admin</allow_active>
+#                 </defaults>
+#                 <annotate key="org.freedesktop.policykit.exec.path">${installedHelperPath}</annotate>
+#                 <annotate key="org.freedesktop.policykit.exec.argv1">--install-system-ca</annotate>
+#               </action>
+#             </policyconfig>
+#           '';
+# 
+#           polkitPromptlessRule = ''
+#             polkit.addRule(function(action, subject) {
+#                 if (action.id == "${polkitRunActionId}" &&
+#                     subject.local && subject.active &&
+#                     (subject.isInGroup("sudo") || subject.isInGroup("wheel"))) {
+#                     return polkit.Result.YES;
+#                 }
+#             });
+#           '';
+         in
       {
         packages.default = fleasionPackage;
 
@@ -164,11 +163,11 @@
           LD_LIBRARY_PATH = libPath;
           };
 
-        _fleasionPolkit = {
-          inherit helperWrapper installedHelperPath polkitPolicyXml polkitPromptlessRule polkitActionNamespace;
-          inherit pythonEnv;
-          helperDaemonScript = "${srcDir}/src/Fleasion/linux_proxy_helper_daemon.py";
-        };
+        #_fleasionPolkit = {
+        #  inherit helperWrapper installedHelperPath polkitPolicyXml polkitPromptlessRule polkitActionNamespace;
+        #  inherit pythonEnv;
+        #  helperDaemonScript = "${srcDir}/src/Fleasion/linux_proxy_helper_daemon.py";
+        #};
       }
     )
     // {
