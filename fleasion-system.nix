@@ -18,10 +18,10 @@ in
     extraHosts = mkOption {
       type = types.lines;
       default = ''
-        127.0.0.1 a.com
-        127.0.0.1 b.com
-        127.0.0.1 c.com
-        127.0.0.1 d.com
+        127.0.0.1 gamejoin.roblox.com
+        127.0.0.1 fts.rbxcdn.com
+        127.0.0.1 contentdelivery.roblox.com
+        127.0.0.1 assetdelivery.roblox.com
       '';
     };
 
