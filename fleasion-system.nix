@@ -22,6 +22,8 @@ in
         127.0.0.1 fts.rbxcdn.com
         127.0.0.1 contentdelivery.roblox.com
         127.0.0.1 assetdelivery.roblox.com
+        127.0.0.1 clientsettings.roblox.com
+        127.0.0.1 clientsettingscdn.roblox.com
       '';
     };
 
