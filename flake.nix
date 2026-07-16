@@ -15,7 +15,7 @@
           owner = "fleasion";
           repo = "Fleasion";
           rev = "main-indev";
-          sha256 = "sha256-v2tk3ycsRiAxEpVJ1ZYVr12zajWwJKNLbTfHTfuWNV4=";
+          sha256 = "sha256-cuyBLcsZJcTxx45T8gkMHm1jk5YC7GeYFGfZrJm/qgc=";
         };
 
         pythonEnv = pkgs.python314.withPackages (ps: with ps; [
