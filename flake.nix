@@ -14,8 +14,8 @@
         fleasionSrc = pkgs.fetchFromGitHub {
           owner = "fleasion";
           repo = "Fleasion";
-          rev = "main-indev";
-          sha256 = "sha256-hCXMCaU2zotkYX3z0ohEtB+g5ZGqHPo1Lj96pdpm+U4=";
+          rev = "main";
+          sha256 = "sha256-je2BP82+OnZj8l02mHyS3u3x1rsQ8Mz3BQazQuhRb1I=";
         };
 
         pythonEnv = pkgs.python314.withPackages (ps: with ps; [
